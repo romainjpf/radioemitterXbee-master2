@@ -1,5 +1,5 @@
 {
-  "name": "gladys-xbeeEmitter",
+  "name": "gladys-xbeeemitter",
   "version": "0.1.0",
   "description": "Gladys modules controlling Xbee devices",
   "main": "index.js",
