@@ -5,20 +5,23 @@
   .module('gladys')
   .controller('xbeeEmitterCtrl', xbeeEmitterCtrl);
 
-  function xbeeEmitterCtrl(){
+  xbeeEmitterCtrl.$inject = ['$scope'];
 
-    var vm = this;
+  function xbeeEmitterCtrl($scope){
+  sails.log.info('Xbee Emitter : xbeeEmitterCtrl');
+  var vm = this;
 
-    /* Method */
-    vm.setLight = setLight;
+  /* Method */
+  vm.setLight = setLight;
 
-    function setLight(value) {
+  function setLight(value) {
+    sails.log.info('Xbee Emitter : setLight');
       var device_id = {
-    identifier: '13A20040AFDCA1',
-    service: 'xbeeEmitter'
-};
+        identifier: '13A20040AFDCA1',
+        service: 'xbeeemitter'
+      };
 
-gladys.device.getByIdentifier(device_id)
+  gladys.device.getByIdentifier(device_id)
     .then(function(devices){
         gladys.deviceType.getByDevice(devices)
             .then(function(dt){
