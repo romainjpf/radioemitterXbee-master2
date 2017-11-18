@@ -3,12 +3,12 @@
 
   angular
   .module('gladys')
-  .controller('xbeeEmitterCtrl', xbeeEmitterCtrl);
+  .controller('xbeeemitterCtrl', xbeeEmitterCtrl);
 
   xbeeEmitterCtrl.$inject = ['$scope'];
 
   function xbeeEmitterCtrl($scope){
-  sails.log.info('Xbee Emitter : xbeeEmitterCtrl');
+  sails.log.info('Xbee Emitter : xbeeemitterCtrl');
   var vm = this;
 
   /* Method */
