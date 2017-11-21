@@ -5,47 +5,47 @@
   .module('gladys')
   .controller('xbeeemitterCtrl', xbeeEmitterCtrl);
 
-  xbeeEmitterCtrl.$inject = ['$scope'];
+  xbeeEmitterCtrl.$inject = ['deviceService', '$scope'];
 
-  function xbeeEmitterCtrl($scope){
-  sails.log.info('Xbee Emitter : xbeeemitterCtrl');
-  var vm = this;
+  function xbeeEmitterCtrl(deviceService, $scope){
+    sails.log.info('Xbee Emitter : xbeeemitterCtrl');
+    var vm = this;
 
-  /* Method */
-  vm.setLight = setLight;
+    vm.deviceTypes = {};
 
-  function setLight(value) {
-    sails.log.info('Xbee Emitter : setLight');
-      var device_id = {
-        identifier: '13A20040AFDCA1',
-        service: 'xbeeemitter'
-      };
+    /* Method */
+    vm.setLight = setLight;
 
-  gladys.device.getByIdentifier(device_id)
-    .then(function(devices){
-        gladys.deviceType.getByDevice(devices)
-            .then(function(dt){
-                var state = {
-                    devicetype: dt[0].id,
-                    value: 1
-                };
+    getGenericData();
 
-                gladys.deviceType.exec(state)
-                    .then(function(state){
-                        // new state created
-                    })
-                    .catch(function(err){
-                        // something bad happened !
-                    });
-                })
-            .catch(function(err){
-                // something bad happened !
-            });
-
+    function getGenericData(){
+      // Get devices xbeeemitter
+      .then(function() {
+        return deviceService.get();
       })
-      .catch(function(err){
-        // something bad happened ! :/
-    });
+      .then(function(devices) {
+        for(var i = 0; i < devices.data.length; i++) {
+          if(devices.data[i].service === 'xbeeemitter'){
+            // get device xbeeemitter
+            var dev = devices.data[i].id;
+
+            // get deviceType
+            deviceService.getDeviceTypesDevice(dev)
+            .then(function(deviceTypes){
+              for(var i = 0; i < deviceTypes.data.length; i++) {
+                if(deviceTypes.data[i].identifier === 'light') vm.deviceTypes.light = deviceTypes.data[i].id;
+                if(deviceTypes.data[i].identifier === 'heating') vm.deviceTypes.heating = deviceTypes.data[i].id;
+                if(deviceTypes.data[i].identifier === 'curtain') vm.deviceTypes.curtain = deviceTypes.data[i].id;
+              }
+            })
+          }
+        }
+      })
+    }
+
+    function setLight(value) {
+      sails.log.info('Xbee Emitter : setLight');
+      deviceService.exec(vm.deviceTypes.light, value);
     }
   }
 })();
